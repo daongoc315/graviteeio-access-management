@@ -75,7 +75,7 @@ public class PolicyChainHandlerTest {
     public void shouldNotInvoke_noPolicies() {
         when(flowManager.findByExtensionPoint(ExtensionPoint.PRE_CONSENT, null)).thenReturn(Single.just(Collections.emptyList()));
 
-        PolicyChainHandlerImpl policyChainHandler = new PolicyChainHandlerImpl(flowManager, policyChainProcessorFactory, executionContextFactory, ExtensionPoint.PRE_CONSENT);
+        PolicyChainHandlerImpl policyChainHandler = new PolicyChainHandlerImpl(flowManager, policyChainProcessorFactory, executionContextFactory, ExtensionPoint.PRE_CONSENT, true);
 
         when(routingContext.request()).thenReturn(request);
         policyChainHandler.handle(routingContext);
@@ -97,7 +97,7 @@ public class PolicyChainHandlerTest {
         when(processor.errorHandler(any())).thenReturn(processor);
         when(policyChainProcessorFactory.create(Collections.singletonList(policy), executionContext)).thenReturn(processor);
 
-        PolicyChainHandlerImpl policyChainHandler = new PolicyChainHandlerImpl(flowManager, policyChainProcessorFactory, executionContextFactory, ExtensionPoint.PRE_CONSENT);
+        PolicyChainHandlerImpl policyChainHandler = new PolicyChainHandlerImpl(flowManager, policyChainProcessorFactory, executionContextFactory, ExtensionPoint.PRE_CONSENT, true);
 
         policyChainHandler.handle(routingContext);
 
@@ -118,7 +118,7 @@ public class PolicyChainHandlerTest {
         when(processor.errorHandler(any())).thenReturn(processor);
         when(policyChainProcessorFactory.create(Arrays.asList(policy, policy), executionContext)).thenReturn(processor);
 
-        PolicyChainHandlerImpl policyChainHandler = new PolicyChainHandlerImpl(flowManager, policyChainProcessorFactory, executionContextFactory, ExtensionPoint.PRE_CONSENT);
+        PolicyChainHandlerImpl policyChainHandler = new PolicyChainHandlerImpl(flowManager, policyChainProcessorFactory, executionContextFactory, ExtensionPoint.PRE_CONSENT, true);
 
         policyChainHandler.handle(routingContext);
 

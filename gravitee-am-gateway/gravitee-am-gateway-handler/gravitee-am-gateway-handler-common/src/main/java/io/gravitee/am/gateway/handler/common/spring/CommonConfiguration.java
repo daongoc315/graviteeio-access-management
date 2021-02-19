@@ -44,7 +44,7 @@ import io.gravitee.am.gateway.handler.common.user.impl.UserServiceImpl;
 import io.gravitee.am.gateway.handler.common.vertx.web.auth.provider.OAuth2AuthProvider;
 import io.gravitee.am.gateway.handler.common.vertx.web.auth.provider.UserAuthProvider;
 import io.gravitee.am.gateway.handler.common.vertx.web.auth.provider.impl.OAuth2AuthProviderImpl;
-import io.gravitee.am.gateway.handler.common.vertx.web.auth.provider.impl.UserAuthProviderImpl;
+import io.gravitee.am.gateway.handler.common.vertx.web.auth.provider.impl.SpengoAuthProviderImpl;
 import io.gravitee.am.gateway.handler.context.ExecutionContextFactory;
 import io.gravitee.am.gateway.handler.context.TemplateVariableProviderFactory;
 import io.gravitee.am.gateway.handler.context.spring.ContextConfiguration;
@@ -121,7 +121,7 @@ public class CommonConfiguration {
 
     @Bean
     public UserAuthProvider userAuthProvider() {
-        return new UserAuthProviderImpl();
+        return new SpengoAuthProviderImpl();
     }
 
     @Bean

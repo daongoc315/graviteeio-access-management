@@ -13,21 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.gravitee.am.identityprovider.api;
+package io.gravitee.am.common.exception.authentication;
 
 /**
- * @author David BRASSELY (david.brassely at graviteesource.com)
+ * @author Eric LELEU (eric.leleu at graviteesource.com)
  * @author GraviteeSource Team
  */
-public interface Authentication {
+public class NegotiateContinueException extends AuthenticationException {
+    private final String token;
 
-    Object getCredentials();
+    public NegotiateContinueException(String token) {
+        super("SPNEGO required mutual authentication");
+        this.token = token;
+    }
 
-    Object getPrincipal();
+    @Override
+    public String getErrorCode() {
+        return "negotiate_continue";
+    }
 
-    AuthenticationContext getContext();
-
-    default boolean useNegotiate() {
-        return false;
+    public String getToken() {
+        return token;
     }
 }

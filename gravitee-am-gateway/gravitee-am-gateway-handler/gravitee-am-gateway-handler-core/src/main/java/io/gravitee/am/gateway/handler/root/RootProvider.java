@@ -216,8 +216,10 @@ public class RootProvider extends AbstractService<ProtocolProvider> implements P
         // login route
         rootRouter.get(PATH_LOGIN)
                 .handler(clientRequestParseHandler)
+                .handler(new LoginNegotiateAuthenticationHandler(userAuthProvider, policyChainHandler.create(ExtensionPoint.POST_LOGIN, false)))
                 .handler(new LoginSocialAuthenticationHandler(identityProviderManager, jwtService, certificateManager))
                 .handler(policyChainHandler.create(ExtensionPoint.PRE_LOGIN))
+                .handler(new LoginAskNegotiateHandler(identityProviderManager))
                 .handler(new LoginEndpoint(thymeleafTemplateEngine, domain));
         rootRouter.post(PATH_LOGIN)
                 .handler(clientRequestParseHandler)

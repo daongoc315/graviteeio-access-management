@@ -54,15 +54,20 @@ public class PolicyChainHandlerImpl implements Handler<RoutingContext> {
     private PolicyChainProcessorFactory policyChainProcessorFactory;
     private ExecutionContextFactory executionContextFactory;
     private ExtensionPoint extensionPoint;
+    // Boolean used to specify if this handler has to call the routingContext.next method
+    // for Negotiate authentication, the POST_LOGIN need to be executed in a specific manner where
+    // calling the .next isn't necessary
+    private boolean callNext;
 
     public PolicyChainHandlerImpl(FlowManager flowManager,
                                   PolicyChainProcessorFactory policyChainProcessorFactory,
                                   ExecutionContextFactory executionContextFactory,
-                                  ExtensionPoint extensionPoint) {
+                                  ExtensionPoint extensionPoint, boolean callNext) {
         this.flowManager = flowManager;
         this.policyChainProcessorFactory = policyChainProcessorFactory;
         this.executionContextFactory = executionContextFactory;
         this.extensionPoint = extensionPoint;
+        this.callNext = callNext;
     }
 
     @Override
@@ -74,7 +79,9 @@ public class PolicyChainHandlerImpl implements Handler<RoutingContext> {
                 (request.params().contains(ConstantKeys.ERROR_PARAM_KEY) ||
                         request.params().contains(ConstantKeys.WARNING_PARAM_KEY) ||
                         request.params().contains(ConstantKeys.SUCCESS_PARAM_KEY))) {
-            context.next();
+            if (callNext) {
+                context.next();
+            }
             return;
         }
 
@@ -89,7 +96,9 @@ public class PolicyChainHandlerImpl implements Handler<RoutingContext> {
             List<Policy> policies = handler.result();
             // if no policies continue
             if (policies.isEmpty()) {
-                context.next();
+                if (callNext) {
+                    context.next();
+                }
                 return;
             }
 
@@ -120,8 +129,11 @@ public class PolicyChainHandlerImpl implements Handler<RoutingContext> {
                         }
                         context.put(k, v);
                     });
+
                     // continue
-                    context.next();
+                    if (callNext) {
+                        context.next();
+                    }
                 });
             });
         });

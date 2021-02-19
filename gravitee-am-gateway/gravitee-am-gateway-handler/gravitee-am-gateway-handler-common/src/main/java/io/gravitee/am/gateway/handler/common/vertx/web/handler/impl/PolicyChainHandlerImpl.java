@@ -42,8 +42,8 @@ public class PolicyChainHandlerImpl implements PolicyChainHandler {
     private ExecutionContextFactory executionContextFactory;
 
     @Override
-    public Handler<RoutingContext> create(ExtensionPoint extensionPoint) {
+    public Handler<RoutingContext> create(ExtensionPoint extensionPoint, boolean nextHandlerCall) {
         Objects.requireNonNull(extensionPoint, "An extension point is required");
-        return new io.gravitee.am.gateway.handler.common.vertx.web.handler.impl.internal.PolicyChainHandlerImpl(flowManager, policyChainProcessorFactory, executionContextFactory, extensionPoint);
+        return new io.gravitee.am.gateway.handler.common.vertx.web.handler.impl.internal.PolicyChainHandlerImpl(flowManager, policyChainProcessorFactory, executionContextFactory, extensionPoint, nextHandlerCall);
     }
 }

@@ -25,5 +25,9 @@ import io.vertx.reactivex.ext.web.RoutingContext;
  */
 public interface PolicyChainHandler {
 
-    Handler<RoutingContext> create(ExtensionPoint extensionPoint);
+    default Handler<RoutingContext> create(ExtensionPoint extensionPoint) {
+        return create(extensionPoint, true);
+    }
+
+    Handler<RoutingContext> create(ExtensionPoint extensionPoint, boolean nextHandlerCall);
 }

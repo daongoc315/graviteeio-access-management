@@ -37,7 +37,9 @@ import org.slf4j.LoggerFactory;
 import java.util.HashMap;
 import java.util.Map;
 
+import static io.gravitee.am.gateway.handler.common.utils.ConstantKeys.*;
 import static io.gravitee.am.gateway.handler.common.vertx.utils.UriBuilderRequest.CONTEXT_PATH;
+import static io.gravitee.common.http.HttpStatusCode.UNAUTHORIZED_401;
 
 /**
  * @author Titouan COMPIEGNE (titouan.compiegne at graviteesource.com)
@@ -112,6 +114,17 @@ public class LoginEndpoint implements Handler<RoutingContext> {
         // render the login page
         engine.render(routingContext.data(), getTemplateFileName(client), res -> {
             if (res.succeeded()) {
+                // At least one Provider manage an authentication by negotiation
+                // return Status 401 with the relevant WWW-Authenticate header
+                // if the browser doesn't support this mechanism or can't provide
+                // a valid token for the user, the login form will be rendered to
+                // allow a standard user authentication using login/pwd or webauthn
+                if (routingContext.get(ASK_FOR_NEGOTIATE_KEY)) {
+                    String negoToken = routingContext.get(NEGOTIATE_CONTINUE_TOKEN_KEY);
+                    routingContext.response().putHeader(HttpHeaders.WWW_AUTHENTICATE, negoToken == null ? AUTH_NEGOTIATE_KEY : AUTH_NEGOTIATE_KEY + " " + negoToken);
+                    routingContext.response().setStatusCode(UNAUTHORIZED_401);
+                }
+
                 routingContext.response().putHeader(HttpHeaders.CONTENT_TYPE, MediaType.TEXT_HTML);
                 routingContext.response().end(res.result());
             } else {

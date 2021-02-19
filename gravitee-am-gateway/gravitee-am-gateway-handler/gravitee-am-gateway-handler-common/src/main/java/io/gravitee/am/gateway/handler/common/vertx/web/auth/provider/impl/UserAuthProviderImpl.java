@@ -87,7 +87,7 @@ public class UserAuthProviderImpl implements UserAuthProvider {
         });
     }
 
-    private void parseClient(String clientId, Handler<AsyncResult<Client>> authHandler) {
+    protected void parseClient(String clientId, Handler<AsyncResult<Client>> authHandler) {
         logger.debug("Attempt authentication with client " + clientId);
 
         clientSyncService

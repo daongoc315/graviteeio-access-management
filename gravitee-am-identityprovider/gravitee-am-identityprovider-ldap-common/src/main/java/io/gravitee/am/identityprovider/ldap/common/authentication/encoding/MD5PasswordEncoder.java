@@ -13,21 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.gravitee.am.identityprovider.api;
+package io.gravitee.am.identityprovider.ldap.common.authentication.encoding;
 
 /**
- * @author David BRASSELY (david.brassely at graviteesource.com)
+ * @author Titouan COMPIEGNE (titouan.compiegne at graviteesource.com)
  * @author GraviteeSource Team
  */
-public interface Authentication {
+public class MD5PasswordEncoder extends MessageDigestPasswordEncoder {
 
-    Object getCredentials();
+    public MD5PasswordEncoder() {
+        super("MD5");
+    }
 
-    Object getPrincipal();
-
-    AuthenticationContext getContext();
-
-    default boolean useNegotiate() {
-        return false;
+    @Override
+    public String getPasswordSchemeLabel() {
+        return "MD5";
     }
 }
