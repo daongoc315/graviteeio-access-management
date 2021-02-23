@@ -47,6 +47,7 @@ import java.util.stream.Stream;
 public class JavaKeyStoreProvider implements CertificateProvider, InitializingBean {
 
     private KeyPair keyPair;
+    private Certificate cert;
     private JWKSet jwkSet;
     private String publicKey;
     private Set<JWK> keys;
@@ -75,7 +76,7 @@ public class JavaKeyStoreProvider implements CertificateProvider, InitializingBe
         Key key = keystore.getKey(configuration.getAlias(), configuration.getKeypass().toCharArray());
         if (key instanceof PrivateKey) {
             // Get certificate of public key
-            Certificate cert = keystore.getCertificate(configuration.getAlias());
+            cert = keystore.getCertificate(configuration.getAlias());
             // Get Signing Algorithm name
             if (cert instanceof X509Certificate) {
                 signature = getSignature(((X509Certificate) cert).getSigAlgName());
@@ -112,6 +113,11 @@ public class JavaKeyStoreProvider implements CertificateProvider, InitializingBe
     @Override
     public CertificateMetadata certificateMetadata() {
         return certificateMetadata;
+    }
+
+    @Override
+    public Certificate certificate() {
+        return cert;
     }
 
     private String getPublicKey() throws IOException {
